@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "auco:dev": "yarn workspace @ss-2/auco dev",
+    "auco:start": "yarn workspace @ss-2/auco start"
+  }
+}
