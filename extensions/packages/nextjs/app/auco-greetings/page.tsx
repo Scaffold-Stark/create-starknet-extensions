@@ -24,6 +24,7 @@ const PonderGreetings: NextPage = () => {
   const { data: greetingsData } = useQuery({
     queryKey: ["greetings"],
     queryFn: fetchGreetings,
+    refetchInterval: 2000,
   });
 
   console.log(greetingsData)
