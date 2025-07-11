@@ -109,23 +109,18 @@ const generateTsAbis = async () => {
     },
   );
 
-  fs.writeFileSync(
-    path.join(TARGET_DIR, "deployedContracts.ts"),
-    formattedContent,
-  );
+  const targetDirs = [TARGET_DIR, TARGET_DIR_AUCO];
 
-  console.log(
-    `📝 Updated TypeScript contract definition file on ${TARGET_DIR}/deployedContracts.ts`,
-  );
+  for (const targetDir of targetDirs) {
+    fs.writeFileSync(
+      path.join(targetDir, "deployedContracts.ts"),
+      formattedContent,
+    );
 
-  fs.writeFileSync(
-    path.join(TARGET_DIR_AUCO, "deployedContracts.ts"),
-    formattedContent,
-  );
-
-  console.log(
-    `📝 Updated TypeScript contract definition file on ${TARGET_DIR_AUCO}/deployedContracts.ts`,
-  );
+    console.log(
+      `📝 Updated TypeScript contract definition file on ${targetDir}/deployedContracts.ts`,
+    );
+  }
 };
 
 generateTsAbis();
