@@ -7,7 +7,7 @@ export class AucoService {
   private db: Database.Database;
 
   constructor() {
-    this.db = new Database("./indexer.db");
+    this.db = new Database(process.env.SQLITE_DB_PATH || "./indexer.db");
     this.createGreetingTable();
     this.initializeIndexer();
   }
@@ -27,15 +27,15 @@ export class AucoService {
     try {
       // Create a simple configuration that should work
       const config: IndexerConfig = {
-        rpcNodeUrl: 'http://127.0.0.1:5050',
-        wsNodeUrl: 'ws://127.0.0.1:5050/ws',
+        rpcNodeUrl: process.env.RPC_URL || 'http://127.0.0.1:5050',
+        wsNodeUrl: process.env.WS_URL || 'ws://127.0.0.1:5050/ws',
         database: {
           type: 'sqlite',
           config: {
             dbInstance: this.db,
           }
         },
-        startingBlockNumber: 0,
+        startingBlockNumber: process.env.STARTING_BLOCK_NUMBER === "latest" ? "latest" : parseInt(process.env.STARTING_BLOCK_NUMBER || '0'),
       };
 
       this.indexer = new StarknetIndexer(config);
