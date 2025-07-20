@@ -27,7 +27,7 @@ const PonderGreetings: NextPage = () => {
     refetchInterval: 2000,
   });
 
-  console.log(greetingsData)
+  console.log(greetingsData);
 
   return (
     <>
@@ -72,7 +72,8 @@ const PonderGreetings: NextPage = () => {
               </code>
             </p>
             <p>
-              Finally, query your data using the custom API in / packages / auco / index.ts based on your data
+              Finally, query your data using the custom API in / packages / auco
+              / index.ts based on your data
             </p>
             <p>
               You can find more information at{" "}
@@ -88,8 +89,8 @@ const PonderGreetings: NextPage = () => {
 
           <div>
             <p>
-              Below you can see a list of greetings fetched from the Custom API we wrote in packages / auco / src / index.ts
-              API.
+              Below you can see a list of greetings fetched from the Custom API
+              we wrote in packages / auco / src / index.ts API.
             </p>
             <p>
               Add a greeting from the{" "}
@@ -123,13 +124,11 @@ const PonderGreetings: NextPage = () => {
                   <p>from</p>
                   <Address address={greeting.greeting_setter} />
                   <p>at</p>
-                  <p className="my-2 font-medium">
-                    {greeting.timestamp}
-                  </p>
+                  <p className="my-2 font-medium">{greeting.timestamp}</p>
                   {greeting.premium && (
                     <p className="my-2 font-medium">
                       {" "}
-                      - Premium (Ξ{formatEther(Number(greeting.value))})
+                      - Premium ({formatEther(BigInt(greeting.value))} STRK)
                     </p>
                   )}
                 </div>
