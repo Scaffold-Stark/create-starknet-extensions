@@ -116,7 +116,7 @@ const PonderGreetings: NextPage = () => {
               </p>
             </div>
           )}
-          {greetingsData && greetingsData.events.length && (
+          {greetingsData && greetingsData.events.length > 0 && (
             <div className="flex flex-col items-center">
               {greetingsData.events.map((greeting: Greeting) => (
                 <div key={greeting.id} className="flex items-center space-x-2">
