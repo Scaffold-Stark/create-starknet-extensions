@@ -69,7 +69,7 @@ jobs:
 
       - name: Scaffold test project using current branch extension
         run: |
-          yarn cli -e "$BRANCH_NAME" -d test-project
+          yarn cli -e "$BRANCH_NAME" -d test-project -i
         working-directory: ./create-stark
 
       - name: Run smart contract tests
