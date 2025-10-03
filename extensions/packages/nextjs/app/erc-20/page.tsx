@@ -151,7 +151,7 @@ const ERC20Page: NextPage = () => {
               onClick={handleMintToken}
               disabled={!connectedAddress}
             >
-              Mint 100 Tokens
+              Mint 100 Tokens (Only Owner)
             </button>
           </div>
 
