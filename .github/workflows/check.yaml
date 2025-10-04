@@ -16,6 +16,11 @@ jobs:
         node: [lts/*]
 
     steps:
+      - name: Setup Git User
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
       - name: Checkout
         uses: actions/checkout@master
 
@@ -24,11 +29,10 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Install scarb
-        uses: software-mansion/setup-scarb@v1
-
-      - name: Install snfoundryup
-        uses: foundry-rs/setup-snfoundry@v3
+      - name: Enable Corepack and set Yarn version
+        run: |
+          corepack enable
+          yarn set version 3.5.0
 
       - name: Checkout Create Stark Repository
         uses: actions/checkout@v4
@@ -70,6 +74,16 @@ jobs:
         run: |
           yarn cli -e "$BRANCH_NAME" -d test-project -i
         working-directory: ./create-stark
+
+      - name: Install scarb
+        uses: software-mansion/setup-scarb@v1
+        with:
+          tool-versions: ./create-stark/test-project/.tool-versions
+
+      - name: Install snfoundryup
+        uses: foundry-rs/setup-snfoundry@v3
+        with:
+          tool-versions: ./create-stark/test-project/.tool-versions
 
       - name: Run smart contract tests
         run: yarn test
