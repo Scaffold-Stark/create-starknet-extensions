@@ -24,6 +24,11 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Enable Corepack and set Yarn version
+        run: |
+          corepack enable
+          yarn set version 3.5.0
+
       - name: Install scarb
         uses: software-mansion/setup-scarb@v1
 
