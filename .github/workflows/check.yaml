@@ -41,6 +41,7 @@ jobs:
           repository: Scaffold-Stark/create-stark
           token: ${{ secrets.ORG_GITHUB_TOKEN }}
           path: create-stark
+          ref: alan/ss2-212-create-stark-skip-install-dependencies-step
 
       - name: Install dependencies (Create Stark)
         run: yarn install --immutable
