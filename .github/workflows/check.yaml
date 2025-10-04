@@ -1,0 +1,96 @@
+name: Create Stark Extensions CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+    env:
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [lts/*]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Setup node env
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install scarb
+        uses: software-mansion/setup-scarb@v1
+
+      - name: Install snfoundryup
+        uses: foundry-rs/setup-snfoundry@v3
+
+      - name: Checkout Create Stark Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Scaffold-Stark/create-stark
+          token: ${{ secrets.ORG_GITHUB_TOKEN }}
+          path: create-stark
+
+      - name: Install dependencies (Create Stark)
+        run: yarn install --immutable
+        working-directory: ./create-stark
+
+      - name: Modify create-stark to use local extensions
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Current branch: $BRANCH_NAME"
+          EXT_FILE=./create-stark/src/extensions.json
+          if ! command -v jq >/dev/null 2>&1; then
+            echo "jq not found. Installing..."
+            sudo apt-get update -y && sudo apt-get install -y jq
+          fi
+          tmp_file=$(mktemp)
+          jq --arg bn "$BRANCH_NAME" \
+            '.[. | length] = {
+              "extensionFlagValue": $bn,
+              "description": ("CI to test " + $bn),
+              "repository": "https://github.com/Scaffold-Stark/create-starknet-extensions",
+              "branch": $bn
+            }' "$EXT_FILE" > "$tmp_file"
+          mv "$tmp_file" "$EXT_FILE"
+          cat "$EXT_FILE"
+
+      - name: Build Create Stark CLI
+        run: yarn build
+        working-directory: ./create-stark
+
+      - name: Scaffold test project using current branch extension
+        run: |
+          yarn cli -e "$BRANCH_NAME" -d test-project -i
+        working-directory: ./create-stark
+
+      - name: Run smart contract tests
+        run: yarn test
+        working-directory: ./create-stark/test-project
+
+      - name: Check Code Format
+        run: yarn format:check
+        working-directory: ./create-stark/test-project
+
+      - name: Run Next.js lint
+        run: yarn next:lint --max-warnings=0
+        working-directory: ./create-stark/test-project/packages/nextjs
+
+      - name: Check typings on Next.js
+        run: yarn next:check-types
+        working-directory: ./create-stark/test-project/packages/nextjs
+
+      - name: Run Next.js tests
+        run: yarn test
+        working-directory: ./create-stark/test-project/packages/nextjs
+
+      - name: Build Next.js project
+        run: yarn build
+        working-directory: ./create-stark/test-project/packages/nextjs
