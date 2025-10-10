@@ -94,6 +94,7 @@ jobs:
           set -euo pipefail
           echo "Using asdf to install starknet-devnet from .tool-versions"
           cd ./create-stark/test-project
+          asdf plugin add starknet-devnet || true
           asdf install
           asdf reshim || true
           which starknet-devnet || true
