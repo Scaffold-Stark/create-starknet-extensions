@@ -85,6 +85,35 @@ jobs:
         with:
           tool-versions: ./create-stark/test-project/.tool-versions
 
+      - name: Ensure starknet-devnet is installed (asdf or pipx)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if command -v asdf >/dev/null 2>&1; then
+            echo "asdf found; attempting asdf install in project"
+            if (cd ./create-stark/test-project && asdf install); then
+              (cd ./create-stark/test-project && asdf reshim || true)
+            else
+              echo "asdf install failed; falling back to pipx"
+              if ! command -v pipx >/dev/null 2>&1; then
+                sudo apt-get update -y && sudo apt-get install -y pipx python3-venv
+                pipx ensurepath || true
+                echo "~/.local/bin" >> "$GITHUB_PATH" || true
+              fi
+              pipx install starknet-devnet || pipx upgrade starknet-devnet || true
+            fi
+          else
+            echo "asdf not found; using pipx to install starknet-devnet"
+            if ! command -v pipx >/dev/null 2>&1; then
+              sudo apt-get update -y && sudo apt-get install -y pipx python3-venv
+              pipx ensurepath || true
+              echo "~/.local/bin" >> "$GITHUB_PATH" || true
+            fi
+            pipx install starknet-devnet || pipx upgrade starknet-devnet || true
+          fi
+          which starknet-devnet || true
+          starknet-devnet --version || true
+
       - name: Run Devnet
         run: |
           if ! command -v nc >/dev/null 2>&1; then
