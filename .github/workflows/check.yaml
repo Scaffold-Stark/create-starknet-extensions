@@ -85,6 +85,13 @@ jobs:
         with:
           tool-versions: ./create-stark/test-project/.tool-versions
 
+      - name: Run Devnet
+        run: |
+          nohup yarn chain > devnet.log 2>&1 &
+          echo $! > devnet.pid
+          sleep 5
+        working-directory: ./create-stark/test-project
+
       - name: Deploy contracts
         run: yarn deploy
         working-directory: ./create-stark/test-project
@@ -112,3 +119,22 @@ jobs:
       - name: Build Next.js project
         run: yarn build
         working-directory: ./create-stark/test-project/packages/nextjs
+
+      - name: Print Devnet logs on failure
+        if: failure()
+        run: |
+          echo "=== Devnet logs (last 200 lines) ==="
+          if [ -f devnet.log ]; then
+            tail -n 200 devnet.log
+          else
+            echo "devnet.log not found"
+          fi
+        working-directory: ./create-stark/test-project
+
+      - name: Stop Devnet
+        if: always()
+        run: |
+          if [ -f devnet.pid ]; then
+            kill $(cat devnet.pid) || true
+          fi
+        working-directory: ./create-stark/test-project
