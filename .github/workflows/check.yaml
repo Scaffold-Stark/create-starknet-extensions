@@ -85,6 +85,10 @@ jobs:
         with:
           tool-versions: ./create-stark/test-project/.tool-versions
 
+      - name: Deploy contracts
+        run: yarn deploy
+        working-directory: ./create-stark/test-project
+
       - name: Run smart contract tests
         run: yarn test
         working-directory: ./create-stark/test-project
