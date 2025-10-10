@@ -87,9 +87,27 @@ jobs:
 
       - name: Run Devnet
         run: |
+          if ! command -v nc >/dev/null 2>&1; then
+            sudo apt-get update -y && sudo apt-get install -y netcat
+          fi
           nohup yarn chain > devnet.log 2>&1 &
           echo $! > devnet.pid
-          sleep 5
+          echo "Waiting for Devnet on 127.0.0.1:5050 ..."
+          for i in {1..120}; do
+            if nc -z 127.0.0.1 5050; then
+              echo "Devnet is up"
+              break
+            fi
+            if ! kill -0 "$(cat devnet.pid)" 2>/dev/null; then
+              echo "Devnet process exited early. Showing logs:" && tail -n +1 devnet.log || true
+              exit 1
+            fi
+            sleep 1
+          done
+          if ! nc -z 127.0.0.1 5050; then
+            echo "Devnet failed to start within timeout. Showing logs:" && tail -n +1 devnet.log || true
+            exit 1
+          fi
         working-directory: ./create-stark/test-project
 
       - name: Deploy contracts
