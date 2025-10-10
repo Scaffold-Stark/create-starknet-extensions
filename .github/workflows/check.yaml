@@ -86,7 +86,7 @@ jobs:
           tool-versions: ./create-stark/test-project/.tool-versions
 
       - name: Setup asdf
-        uses: asdf-vm/actions/setup@v2
+        uses: asdf-vm/actions/setup@v4
 
       - name: Ensure starknet-devnet is installed (asdf or pipx)
         shell: bash
