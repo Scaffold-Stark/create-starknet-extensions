@@ -35,6 +35,11 @@ export const menuLinks: HeaderMenuLink[] = [
     icon: <BugAntIcon className="h-4 w-4" />,
   },
   {
+    label: "Test Contracts",
+    href: "/test",
+    icon: <BugAntIcon className="h-4 w-4" />,
+  },
+  {
     label: "ERC-20",
     href: "/erc-20",
     icon: <BanknotesIcon className="h-4 w-4" />,
