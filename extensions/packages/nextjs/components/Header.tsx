@@ -15,7 +15,7 @@ import { useTheme } from "next-themes";
 import { useTargetNetwork } from "~~/hooks/scaffold-stark/useTargetNetwork";
 import { devnet } from "@starknet-start/chains";
 import { SwitchTheme } from "./SwitchTheme";
-import { useAccount, useNetwork, useProvider } from " @starknet-start/react";
+import { useAccount, useNetwork, useProvider } from "@starknet-start/react";
 import { BlockIdentifier } from "starknet";
 
 type HeaderMenuLink = {
