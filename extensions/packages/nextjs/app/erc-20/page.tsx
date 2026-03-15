@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import { useTheme } from "next-themes";
-import { useAccount } from "@starknet-react/core";
+import { useAccount } from "@starknet-start/react";
 import { AddressInput, IntegerInput } from "~~/components/scaffold-stark";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-stark/useScaffoldReadContract";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-stark/useScaffoldWriteContract";
